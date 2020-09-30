@@ -1,0 +1,12 @@
+pipeline{
+    agent any
+    stages{
+        stage('terraform'){
+            steps{
+                sh '''cd terraform_devops-app-02-05
+                      terraform init
+                      terraform apply -var-file=env-vars.tfvars -auto-approve'''
+            }
+        }
+    }
+}

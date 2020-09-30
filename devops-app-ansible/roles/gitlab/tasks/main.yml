@@ -1,0 +1,67 @@
+---
+# tasks file for gitlab
+
+  - name: Install list of packages
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - curl
+      - openssh-server
+      - ca-certificates
+      - postfix
+
+  - name: Get certificates
+    uri:
+      url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh
+      dest: /script.deb.sh
+
+  - name: add certificates
+    shell: cat /script.deb.sh | bash
+
+  - name: install gitlab-ee
+    apt:
+      name: gitlab-ee
+      state: present
+
+  - name: apply required settings
+    copy:
+      src: gitlab.rb
+      dest: /etc/gitlab/gitlab.rb
+      owner: root
+      group: root
+
+  - name: change locale settings
+    shell: export LC_CTYPE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && dpkg-reconfigure locales --default-priority
+
+  - name: reconfigure gitlab
+    shell: gitlab-ctl reconfigure
+
+  - name: copy script
+    copy:
+      src: script
+      dest: /script
+
+  - name: set root password
+    shell: cat /script | gitlab-rails console production
+
+  - name: copy git script
+    copy:
+      src: git_script.sh
+      dest: git_script.sh
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+    delegate_to: localhost
+    become_user: jenkins
+    tags:
+      - import
+
+  - name: import a project
+    shell: sh ./git_script.sh
+    delegate_to: localhost
+    become_user: jenkins
+    tags:
+      - import
+...

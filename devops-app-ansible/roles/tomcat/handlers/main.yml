@@ -1,0 +1,8 @@
+---
+# handlers file for tomcat
+- name: profile.d
+  command: source /etc/profile
+
+- name: daemon-reload
+  systemd:
+   daemon_reload: yes

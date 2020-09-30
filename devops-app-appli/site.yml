@@ -1,0 +1,21 @@
+---
+- name: deploy app
+  hosts: tomcat
+
+  tasks:
+   - name: install lxml library
+     apt:
+      name: python-lxml
+      state: present
+     become: yes
+
+   - name: get artifact
+     maven_artifact:
+      group_id: com.lesformateurs.maven-project
+      artifact_id: webapp
+      dest: /opt/tomcat/webapps/webapp.war
+      extension: war
+      repository_url: http://cloud-pic.northeurope.cloudapp.azure.com/artifactory/devopsapp-snapshot/
+     become_user: tomcat
+     become: yes
+...

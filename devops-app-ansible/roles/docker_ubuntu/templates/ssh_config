@@ -1,0 +1,7 @@
+Host target
+    User stage
+    Hostname 40.127.106.129
+    IdentityFile id_rsa
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+

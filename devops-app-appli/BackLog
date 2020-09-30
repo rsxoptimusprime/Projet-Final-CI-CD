@@ -1,0 +1,43 @@
+##
+##
+##
+##                    BackLog du Projet CI
+
+US1: "Packager l'application pour la rendre disponible à un déploiement"
+
+## Pré-requis
+	item1: Installer deux VM	- 1 point - 		FAIT
+	item2: Git installé 		- 0 point -		FAIT
+	item3: Compte Gitlab		- 0 point -		FAIT
+	item4: JDK 1.8 installé		- 1 point -		FAIT
+	item5: Maven installé		- 1 point -		FAIT
+	item6: Jenkins en Service	- 2 point -		FAIT
+	item7: Artifactory en Service	- 2 point -		FAIT
+	item8: Connexion des deux VM	- 2 point -		FAIT
+
+## Artifactory
+	item1: Création d'un repo local	- 1 point -		FAIT
+	item2: Création d'un appdeploy	- 1 point -		FAIT
+	item3: Modification du pom.xml	- 1 point -		FAIT
+
+## Maven
+	item1: Récupération du code	- 1 point -		FAIT
+	item2: Git init et remote add	- 1 point -		FAIT
+	item3: Tester et corriger	- 2 point -		FAIT
+	item4: Push sur le SCM		- 1 point -		FAIT
+	item5: deploiement manuel	- 1 point -		FAIT
+		
+
+US2: "Automatiser la construction de l'application, les tests et le déploiement de l'application sur Artifactory"
+
+## Jenkins
+	item1: Création d'un pipeline	- 1 point -		FAIT
+	item2: Tests JUint		- 1 point -		FAIT
+	item3: Tests Checkstyle		- 2 point -		FAIT
+	item4: Tests parallèles		- 1 point -		FAIT
+	item5: Affichage Blue Ocean	- 1 point -		FAIT
+	item6: Déploiement 		- 1 point -		FAIT
+	item7: Jenkinsfile dans SCM	- 1 point -		FAIT
+
+## Honneur à toi: Raphael
+## Honneur et Respect: Ibrahim

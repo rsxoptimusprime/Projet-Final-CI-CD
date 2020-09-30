@@ -1,0 +1,27 @@
+---
+# tasks file for apache
+
+- name: install apache from debian repo
+  apt:
+    name: apache2
+    state: latest
+
+- name: enable modules
+  apache2_module:
+    state: present
+    name: "{{ item }}"
+  with_items:
+  - proxy
+  - proxy_http
+
+- name: change confs
+  copy:
+    src: 000-default.conf
+    dest: /etc/apache2/sites-available/000-default.conf
+  notify:
+    - restart apache
+
+- name: change index.html
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html

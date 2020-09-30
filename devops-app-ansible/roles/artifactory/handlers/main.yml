@@ -1,0 +1,9 @@
+---
+# handlers file for artifactory
+   
+- name: Start arty
+  systemd:
+    name: artifactory
+    state: restarted
+    daemon_reload: yes
+    enabled: yes

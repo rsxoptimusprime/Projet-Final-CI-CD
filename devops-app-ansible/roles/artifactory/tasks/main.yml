@@ -1,0 +1,65 @@
+---
+# tasks file for artifactory
+
+- name: get jdk1.8
+  get_url:
+    url: "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz"
+    dest: /opt/jdk1.8.tar.gz
+    validate_certs: no
+    headers: "Cookie: oraclelicense=accept-securebackup-cookie"
+
+- name: create path
+  file:
+    path: /opt/jdk1.8
+    state: directory
+
+- name: unpack the archive
+  unarchive:
+    remote_src: yes
+    src: /opt/jdk1.8.tar.gz
+    dest: /opt/jdk1.8
+    owner: root
+    group: root
+    extra_opts:
+    - --strip-components=1
+
+- name: creation user artifactory
+  user:
+   name: artifactory
+   state: present
+
+- file:
+    path: /opt/artifactory
+    owner: artifactory
+    group: artifactory
+    state: directory
+
+- name: Download artifactory-oss
+  get_url:
+    url: https://api.bintray.com/content/jfrog/artifactory/jfrog-artifactory-oss-$latest.zip;bt_package=jfrog-artifactory-oss-zip
+    dest: /opt/artifactory/artifactory-oss.zip
+
+- name: Download unzip
+  apt: 
+   name: unzip
+   state: present
+
+- name: Unarchive a file 
+  unarchive:
+    remote_src: yes
+    src: /opt/artifactory/artifactory-oss.zip
+    dest: /opt/artifactory
+
+- file:
+    path: /opt/artifactory/artifactory-oss-6.3.3/
+    owner: artifactory
+    group: artifactory
+    recurse: yes
+
+- template:
+   src: artifactory.service.j2
+   dest: /etc/systemd/system/artifactory.service
+  notify: Start arty
+
+
+

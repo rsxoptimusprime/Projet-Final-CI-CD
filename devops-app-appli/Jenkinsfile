@@ -1,0 +1,64 @@
+pipeline{
+    agent{
+        label 'docker-ci'
+    }
+    stages{
+        stage('git'){
+            steps{
+                deleteDir()
+                git branch: 'CloudPIC', changelog: false, credentialsId: 'gitlab-root', poll: false, url: 'http://cloud-pic.northeurope.cloudapp.azure.com/gitlab/root/devops-app.git'
+            }
+        }
+        stage('clean'){
+            steps{
+                withMaven(mavenSettingsFilePath: 'settings.xml',maven: 'maven-3.5.4') {
+                    sh 'mvn clean'
+                }
+            }
+        }
+        stage ('Run Tests') {
+            parallel {
+                stage('JUnit Test'){
+                    steps {
+                        withMaven(maven: 'maven-3.5.4') {
+                            sh 'mvn test'
+                        }
+                    }
+                    post {
+                        always {
+                            junit allowEmptyResults: true,  testResults: 'server/target/surefire-reports/*.xml'
+                        }
+                    }
+                }
+                stage('Checkstyle Test'){
+                    steps {
+                        withMaven(maven: 'maven-3.5.4') {
+                            sh 'mvn checkstyle:checkstyle'
+                        }
+                    }
+                    post{
+                        always{
+                            checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-result.xml', unHealthy: ''
+                        }
+                    }
+                }
+            }
+        }        
+        stage('deploy'){
+            steps{
+                withMaven(mavenSettingsFilePath: 'settings.xml', maven: 'maven-3.5.4') {
+                    sh 'mvn clean deploy'
+                }
+            }
+        }
+    stage('ansible'){
+        agent{
+            label 'docker-cd'
+        }
+        steps{
+            git branch: 'CloudPIC', changelog: false, credentialsId: 'gitlab-root', poll: false, url: 'http://cloud-pic.northeurope.cloudapp.azure.com/gitlab/root/devops-app.git'
+            ansiblePlaybook credentialsId: 'stage-ssh', disableHostKeyChecking: true, installation: 'ansible', inventory: 'inventory.yml', playbook: 'site.yml'
+        }
+    }
+}
+}

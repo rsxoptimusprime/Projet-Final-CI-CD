@@ -1,0 +1,10 @@
+---
+# handlers file for docker_ubuntu
+- name: Restart docker
+  become: true
+
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+

@@ -1,0 +1,34 @@
+---
+# tasks file for docker_ubuntu
+  - name: Add Docker GPG key
+    apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+  - name: Add Docker APT repository
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+
+  - name: Install list of packages
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - docker-ce
+
+   ## enable Docker REST API for Jenkins
+  - name: modify docker service
+    template:
+     src: docker.service.j2
+     dest: /lib/systemd/system/docker.service
+     owner: root
+     group: root
+     mode: '0644'
+    notify: Restart docker
+
+  - name: pull slave images
+    shell: docker pull moufida/maven_slv && docker pull moufida/ansible_slv
+...

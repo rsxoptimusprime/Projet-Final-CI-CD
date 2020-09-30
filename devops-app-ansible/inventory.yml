@@ -1,0 +1,14 @@
+[devops-app-01]
+localhost
+
+[devops-app-02]
+10.0.2.5
+
+[devops-app-03]
+10.0.2.6
+
+[devops-app-04]
+10.0.2.7
+
+[devops-app-05]
+tomcat-pic.westeurope.cloudapp.azure.com
