@@ -2,7 +2,7 @@
 
 Code Terraform pour le projet "Pipeline CI / CD en automatique"
 
-Réalisé par l'équipe CloudPIC (Moufida et Raphaël)
+Réalisé par Massine
 
 # Architecture du projet
 
